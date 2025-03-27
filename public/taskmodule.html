@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Record Voice Note</title>
+    <script src="https://res.cdn.office.net/teams-js/2.0.0/js/MicrosoftTeams.min.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .button {
+            background-color: #0078d4;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+        }
+        .recording {
+            color: #d13438;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Record Voice Note</h2>
+        <div id="recordingStatus"></div>
+        <button id="startButton" class="button">Start Recording</button>
+        <button id="stopButton" class="button" disabled>Stop Recording</button>
+        <button id="sendButton" class="button" disabled>Send Voice Note</button>
+    </div>
+
+    <script>
+        let mediaRecorder;
+        let audioChunks = [];
+
+        // Initialize Teams SDK
+        microsoftTeams.initialize();
+
+        // Get DOM elements
+        const startButton = document.getElementById('startButton');
+        const stopButton = document.getElementById('stopButton');
+        const sendButton = document.getElementById('sendButton');
+        const recordingStatus = document.getElementById('recordingStatus');
+
+        // Start recording
+        startButton.addEventListener('click', async () => {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                mediaRecorder = new MediaRecorder(stream);
+                audioChunks = [];
+
+                mediaRecorder.ondataavailable = (event) => {
+                    audioChunks.push(event.data);
+                };
+
+                mediaRecorder.onstop = () => {
+                    const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+                    sendButton.disabled = false;
+                };
+
+                mediaRecorder.start();
+                startButton.disabled = true;
+                stopButton.disabled = false;
+                recordingStatus.textContent = 'Recording...';
+                recordingStatus.className = 'recording';
+            } catch (error) {
+                console.error('Error accessing microphone:', error);
+                recordingStatus.textContent = 'Error accessing microphone. Please check permissions.';
+            }
+        });
+
+        // Stop recording
+        stopButton.addEventListener('click', () => {
+            mediaRecorder.stop();
+            mediaRecorder.stream.getTracks().forEach(track => track.stop());
+            startButton.disabled = false;
+            stopButton.disabled = true;
+            recordingStatus.textContent = 'Recording stopped';
+            recordingStatus.className = '';
+        });
+
+        // Send voice note
+        sendButton.addEventListener('click', async () => {
+            const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+            const formData = new FormData();
+            formData.append('voiceNote', audioBlob);
+
+            try {
+                const response = await fetch('/sendMessage', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (response.ok) {
+                    microsoftTeams.tasks.submitTask({
+                        type: "message",
+                        value: "Voice note sent successfully!"
+                    });
+                } else {
+                    throw new Error('Failed to send voice note');
+                }
+            } catch (error) {
+                console.error('Error sending voice note:', error);
+                recordingStatus.textContent = 'Error sending voice note. Please try again.';
+            }
+        });
+    </script>
+</body>
+</html> 
