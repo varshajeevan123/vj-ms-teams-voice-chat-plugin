@@ -237,17 +237,6 @@ app.post("/composeExtension/command", async (req, res) => {
     }
 
     try {
-        // Fetch chats for recipient selection
-        const chatsResponse = await axios.get(`${GRAPH_API_URL}/me/chats?$top=20&$expand=members`, {
-            headers: { Authorization: `Bearer ${accessToken}` }
-        });
-
-        const chats = chatsResponse.data.value || [];
-        const chatOptions = chats.map(chat => ({
-            title: chat.topic || chat.chatType,
-            value: chat.id
-        }));
-
         res.json({
             task: {
                 type: "continue",
@@ -261,13 +250,6 @@ app.post("/composeExtension/command", async (req, res) => {
                                 text: "Record Voice Note",
                                 weight: "bolder",
                                 size: "large"
-                            },
-                            {
-                                type: "Input.ChoiceSet",
-                                id: "chatId",
-                                label: "Select Recipient",
-                                isRequired: true,
-                                choices: chatOptions
                             },
                             {
                                 type: "TextBlock",
