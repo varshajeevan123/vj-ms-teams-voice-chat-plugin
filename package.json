@@ -1,12 +1,12 @@
 {
   "name": "teams-voice-note-plugin",
   "version": "1.0.0",
-  "description": "Teams Voice Note Plugin",
+  "description": "A Teams app for recording and sharing voice notes",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
     "dev": "nodemon server.js",
-    "build": "if not exist dest mkdir dest && xcopy /E /I /Y teams-manifest dest\\teams-manifest && xcopy /E /I /Y config dest\\config && xcopy /E /I /Y ssl dest\\ssl && copy /Y server.js dest\\ && copy /Y package.json dest\\"
+    "build": "if not exist public mkdir public && xcopy /E /I /Y teams-manifest public\\teams-manifest && copy /Y index.html public\\ && copy /Y netlify.toml public\\"
   },
   "keywords": [],
   "author": "",
@@ -17,7 +17,7 @@
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.18.3",
-    "express-session": "^1.18.0",
+    "express-session": "^1.18.1",
     "https": "^1.0.0",
     "multer": "^1.4.5-lts.2",
     "node-fetch": "^3.3.2",
