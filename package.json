@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node server.js",
     "dev": "nodemon server.js",
-    "build": "if not exist public mkdir public && xcopy /E /I /Y teams-manifest public\\teams-manifest && copy /Y index.html public\\ && copy /Y netlify.toml public\\"
+    "build": "if not exist public mkdir public && xcopy /E /I /Y teams-manifest public\\teams-manifest && copy /Y index.html public\\"
   },
   "keywords": [],
   "author": "",
