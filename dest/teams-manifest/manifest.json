@@ -1,0 +1,71 @@
+{
+    "$schema": "https://developer.microsoft.com/en-us/json-schemas/teams/v1.11/MicrosoftTeams.schema.json",
+    "manifestVersion": "1.11",
+    "version": "1.0.0",
+    "id": "f1d01b8f-3f8e-4209-bd3b-439c1d0be5e0",
+    "packageName": "com.microsoft.teams.extension",
+    "developer": {
+        "name": "Teams App, Inc.",
+        "websiteUrl": "https://14ee-202-83-55-151.ngrok-free.app",
+        "privacyUrl": "https://14ee-202-83-55-151.ngrok-free.app/privacy",
+        "termsOfUseUrl": "https://14ee-202-83-55-151.ngrok-free.app/terms"
+    },
+    "icons": {
+        "color": "color.png",
+        "outline": "outline.png"
+    },
+    "name": {
+        "short": "Voice Notes",
+        "full": "Teams Voice Note Plugin"
+    },
+    "description": {
+        "short": "Record and share voice notes in Teams",
+        "full": "A Teams app for recording and sharing voice notes in Teams chats. Easily record, save, and share voice messages with your team members."
+    },
+    "accentColor": "#FFFFFF",
+    "bots": [],
+    "composeExtensions": [
+        {
+            "botId": "f1d01b8f-3f8e-4209-bd3b-439c1d0be5e0",
+            "commands": [
+                {
+                    "id": "recordVoiceNote",
+                    "title": "Record Voice Note",
+                    "description": "Record and send a voice note in this chat",
+                    "initialRun": true,
+                    "fetchTask": true,
+                    "context": ["compose"]
+                }
+            ]
+        }
+    ],
+    "configurableTabs": [],
+    "staticTabs": [
+        {
+            "entityId": "voice-messages",
+            "name": "Voice Messages",
+            "contentUrl": "https://14ee-202-83-55-151.ngrok-free.app/",
+            "websiteUrl": "https://14ee-202-83-55-151.ngrok-free.app/",
+            "scopes": ["personal"]
+        }
+    ],
+    "permissions": [
+        "messageTeamMembers",
+        "identity"
+    ],
+    "validDomains": [
+        "*.teams.microsoft.com",
+        "*.ngrok-free.app",
+        "14ee-202-83-55-151.ngrok-free.app",
+        "*.login.microsoftonline.com",
+        "*.sharepoint.com",
+        "token.botframework.com"
+    ],
+    "webApplicationInfo": {
+        "id": "f984ebaf-4c50-4de8-8687-80672674ab06",
+        "resource": "api://14ee-202-83-55-151.ngrok-free.app/f984ebaf-4c50-4de8-8687-80672674ab06"
+    },
+    "devicePermissions": [
+        "media"
+    ]
+}
