@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node server.js",
     "dev": "nodemon server.js",
-    "build": "mkdir -p public && cp -r teams-manifest public/ && cp -r static public/"
+    "build": "if not exist public mkdir public && xcopy /E /I /Y teams-manifest public\\teams-manifest && xcopy /E /I /Y static public\\static"
   },
   "keywords": [],
   "author": "",
