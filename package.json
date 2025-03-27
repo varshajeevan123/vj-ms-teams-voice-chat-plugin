@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node server.js",
     "dev": "nodemon server.js",
-    "build": "xcopy /E /I /Y teams-manifest public\\teams-manifest"
+    "build": "mkdir -p public && echo '<!DOCTYPE html><html><head><title>Teams Voice Note Plugin</title></head></html><body><h1>Teams Voice Note Plugin</h1></body></html>' > public/index.html && cp -r teams-manifest public/teams-manifest || xcopy /E /I /Y teams-manifest public\\teams-manifest"
   },
   "keywords": [],
   "author": "",
