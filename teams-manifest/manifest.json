@@ -4,6 +4,12 @@
     "version": "1.0.0",
     "id": "f1d01b8f-3f8e-4209-bd3b-439c1d0be5e0",
     "packageName": "com.microsoft.teams.extension",
+    "developer": {
+        "name": "Teams App, Inc.",
+        "websiteUrl": "https://temsplugin.netlify.app",
+        "privacyUrl": "https://temsplugin.netlify.app/privacy",
+        "termsOfUseUrl": "https://temsplugin.netlify.app/terms"
+    },
     "icons": {
         "color": "color.png",
         "outline": "outline.png"
