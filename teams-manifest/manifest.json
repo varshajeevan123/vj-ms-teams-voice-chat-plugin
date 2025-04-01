@@ -44,8 +44,8 @@
     {
         "entityId": "voice-messages",
         "name": "Voice Messages",
-        "contentUrl": "https://67eb8f2cee85066c827c4ac3--ms-voice-chat-plugin.netlify.app/",
-        "websiteUrl": "https://67eb8f2cee85066c827c4ac3--ms-voice-chat-plugin.netlify.app/",
+        "contentUrl": "https://https://temsplugin.netlify.app/",
+        "websiteUrl": "https://https://temsplugin.netlify.app/",
         "scopes": ["personal"]
     }
 ],
@@ -63,7 +63,7 @@
     ],
     "webApplicationInfo": {
         "id": "f984ebaf-4c50-4de8-8687-80672674ab06",
-        "resource": "https://67eb8f2cee85066c827c4ac3--ms-voice-chat-plugin.netlify.app/.netlify/functions/server"
+        "resource": "https://https://temsplugin.netlify.app/.netlify/functions/server"
     },
     "devicePermissions": [
         "media"
