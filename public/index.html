@@ -24,18 +24,22 @@
       border-radius: 8px;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
-    .chat-list {
+    .dropdown {
       margin-bottom: 20px;
     }
-    .chat-item {
-      padding: 10px;
-      border: 1px solid #ddd;
-      border-radius: 4px;
-      margin-bottom: 10px;
-      cursor: pointer;
+    .progress-bar {
+      width: 100%;
+      height: 10px;
+      background-color: #ddd;
+      border-radius: 5px;
+      overflow: hidden;
+      margin: 10px 0;
     }
-    .chat-item:hover {
-      background-color: #f0f0f0;
+    .progress {
+      height: 100%;
+      background-color: #0078d4;
+      width: 0%;
+      transition: width 0.1s;
     }
     .controls {
       display: flex;
@@ -54,85 +58,95 @@
     button:hover {
       background-color: #005a9e;
     }
+    audio {
+      margin-top: 20px;
+      width: 100%;
+    }
   </style>
 </head>
 <body>
   <div class="container">
     <h1>Teams Voice Note Plugin</h1>
-    <div class="chat-list">
-      <h3>Chat List</h3>
-      <div id="chats">
-        <!-- Chat items will be dynamically added here -->
-      </div>
+    <div class="dropdown">
+      <label for="recipient">Select Recipient:</label>
+      <select id="recipient">
+        <option value="chat1">Team Chat 1</option>
+        <option value="chat2">Team Chat 2</option>
+        <option value="chat3">Team Chat 3</option>
+      </select>
     </div>
     <div class="controls">
       <button id="startRecording">Start Recording</button>
+      <div class="progress-bar">
+        <div class="progress" id="progress"></div>
+      </div>
       <button id="stopRecording" disabled>Stop Recording</button>
       <button id="sendVoiceNote" disabled>Send Voice Note</button>
     </div>
+    <audio id="audioPlayback" controls style="display: none;"></audio>
   </div>
 
   <script>
-    const chats = [
-      { id: "chat1", name: "Team Chat 1" },
-      { id: "chat2", name: "Team Chat 2" },
-      { id: "chat3", name: "Team Chat 3" }
-    ];
-
-    const chatContainer = document.getElementById("chats");
+    const recipientDropdown = document.getElementById("recipient");
     const startRecordingButton = document.getElementById("startRecording");
     const stopRecordingButton = document.getElementById("stopRecording");
     const sendVoiceNoteButton = document.getElementById("sendVoiceNote");
+    const progressBar = document.getElementById("progress");
+    const audioPlayback = document.getElementById("audioPlayback");
 
-    let selectedChatId = null;
     let mediaRecorder;
     let audioChunks = [];
-
-    // Populate chat list
-    chats.forEach(chat => {
-      const chatItem = document.createElement("div");
-      chatItem.className = "chat-item";
-      chatItem.textContent = chat.name;
-      chatItem.onclick = () => {
-        selectedChatId = chat.id;
-        alert(`Selected chat: ${chat.name}`);
-      };
-      chatContainer.appendChild(chatItem);
-    });
+    let recordingInterval;
+    let recordingDuration = 0;
 
     // Start recording
     startRecordingButton.onclick = async () => {
-      if (!selectedChatId) {
-        alert("Please select a chat first.");
+      const selectedRecipient = recipientDropdown.value;
+      if (!selectedRecipient) {
+        alert("Please select a recipient.");
         return;
       }
 
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       mediaRecorder = new MediaRecorder(stream);
+
       mediaRecorder.ondataavailable = event => audioChunks.push(event.data);
       mediaRecorder.onstop = () => {
         const audioBlob = new Blob(audioChunks, { type: "audio/webm" });
-        sendVoiceNoteButton.disabled = false;
+        const audioUrl = URL.createObjectURL(audioBlob);
+        audioPlayback.src = audioUrl;
+        audioPlayback.style.display = "block";
         sendVoiceNoteButton.audioBlob = audioBlob;
+        sendVoiceNoteButton.disabled = false;
       };
 
       mediaRecorder.start();
       startRecordingButton.disabled = true;
       stopRecordingButton.disabled = false;
+
+      // Start progress bar
+      recordingDuration = 0;
+      progressBar.style.width = "0%";
+      recordingInterval = setInterval(() => {
+        recordingDuration += 0.1;
+        progressBar.style.width = `${Math.min(recordingDuration * 10, 100)}%`;
+      }, 100);
     };
 
     // Stop recording
     stopRecordingButton.onclick = () => {
       mediaRecorder.stop();
+      clearInterval(recordingInterval);
       startRecordingButton.disabled = false;
       stopRecordingButton.disabled = true;
     };
 
     // Send voice note
     sendVoiceNoteButton.onclick = async () => {
+      const selectedRecipient = recipientDropdown.value;
       const formData = new FormData();
       formData.append("voiceNote", sendVoiceNoteButton.audioBlob);
-      formData.append("chatId", selectedChatId);
+      formData.append("chatId", selectedRecipient);
 
       const response = await fetch("/.netlify/functions/server/sendMessage", {
         method: "POST",
