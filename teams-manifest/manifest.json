@@ -41,14 +41,14 @@
     ],
     "configurableTabs": [],
     "staticTabs": [
-        {
-            "entityId": "voice-messages",
-            "name": "Voice Messages",
-            "contentUrl": "https://14ee-202-83-55-151.ngrok-free.app/",
-            "websiteUrl": "https://14ee-202-83-55-151.ngrok-free.app/",
-            "scopes": ["personal"]
-        }
-    ],
+    {
+        "entityId": "voice-messages",
+        "name": "Voice Messages",
+        "contentUrl": "https://67eb8f2cee85066c827c4ac3--ms-voice-chat-plugin.netlify.app/",
+        "websiteUrl": "https://67eb8f2cee85066c827c4ac3--ms-voice-chat-plugin.netlify.app/",
+        "scopes": ["personal"]
+    }
+],
     "permissions": [
         "messageTeamMembers",
         "identity"
@@ -63,7 +63,7 @@
     ],
     "webApplicationInfo": {
         "id": "f984ebaf-4c50-4de8-8687-80672674ab06",
-        "resource": "api://14ee-202-83-55-151.ngrok-free.app/f984ebaf-4c50-4de8-8687-80672674ab06"
+        "resource": "https://67eb8f2cee85066c827c4ac3--ms-voice-chat-plugin.netlify.app/.netlify/functions/server"
     },
     "devicePermissions": [
         "media"
