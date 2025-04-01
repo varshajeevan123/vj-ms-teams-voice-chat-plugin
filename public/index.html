@@ -1,1 +1,150 @@
-﻿<!DOCTYPE html><html><head><title>Teams Voice Note Plugin</title></head><body><h1>Teams Voice Note Plugin</h1></body></html>
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Teams Voice Note Plugin</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      background-color: #f4f4f4;
+    }
+    .container {
+      width: 90%;
+      max-width: 600px;
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    .chat-list {
+      margin-bottom: 20px;
+    }
+    .chat-item {
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      margin-bottom: 10px;
+      cursor: pointer;
+    }
+    .chat-item:hover {
+      background-color: #f0f0f0;
+    }
+    .controls {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    button {
+      padding: 10px 20px;
+      margin: 10px;
+      border: none;
+      border-radius: 4px;
+      background-color: #0078d4;
+      color: #fff;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #005a9e;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Teams Voice Note Plugin</h1>
+    <div class="chat-list">
+      <h3>Chat List</h3>
+      <div id="chats">
+        <!-- Chat items will be dynamically added here -->
+      </div>
+    </div>
+    <div class="controls">
+      <button id="startRecording">Start Recording</button>
+      <button id="stopRecording" disabled>Stop Recording</button>
+      <button id="sendVoiceNote" disabled>Send Voice Note</button>
+    </div>
+  </div>
+
+  <script>
+    const chats = [
+      { id: "chat1", name: "Team Chat 1" },
+      { id: "chat2", name: "Team Chat 2" },
+      { id: "chat3", name: "Team Chat 3" }
+    ];
+
+    const chatContainer = document.getElementById("chats");
+    const startRecordingButton = document.getElementById("startRecording");
+    const stopRecordingButton = document.getElementById("stopRecording");
+    const sendVoiceNoteButton = document.getElementById("sendVoiceNote");
+
+    let selectedChatId = null;
+    let mediaRecorder;
+    let audioChunks = [];
+
+    // Populate chat list
+    chats.forEach(chat => {
+      const chatItem = document.createElement("div");
+      chatItem.className = "chat-item";
+      chatItem.textContent = chat.name;
+      chatItem.onclick = () => {
+        selectedChatId = chat.id;
+        alert(`Selected chat: ${chat.name}`);
+      };
+      chatContainer.appendChild(chatItem);
+    });
+
+    // Start recording
+    startRecordingButton.onclick = async () => {
+      if (!selectedChatId) {
+        alert("Please select a chat first.");
+        return;
+      }
+
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      mediaRecorder = new MediaRecorder(stream);
+      mediaRecorder.ondataavailable = event => audioChunks.push(event.data);
+      mediaRecorder.onstop = () => {
+        const audioBlob = new Blob(audioChunks, { type: "audio/webm" });
+        sendVoiceNoteButton.disabled = false;
+        sendVoiceNoteButton.audioBlob = audioBlob;
+      };
+
+      mediaRecorder.start();
+      startRecordingButton.disabled = true;
+      stopRecordingButton.disabled = false;
+    };
+
+    // Stop recording
+    stopRecordingButton.onclick = () => {
+      mediaRecorder.stop();
+      startRecordingButton.disabled = false;
+      stopRecordingButton.disabled = true;
+    };
+
+    // Send voice note
+    sendVoiceNoteButton.onclick = async () => {
+      const formData = new FormData();
+      formData.append("voiceNote", sendVoiceNoteButton.audioBlob);
+      formData.append("chatId", selectedChatId);
+
+      const response = await fetch("/.netlify/functions/server/sendMessage", {
+        method: "POST",
+        body: formData
+      });
+
+      if (response.ok) {
+        alert("Voice note sent successfully!");
+      } else {
+        alert("Failed to send voice note.");
+      }
+    };
+  </script>
+</body>
+</html>
