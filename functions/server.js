@@ -4,6 +4,7 @@ const multer = require("multer");
 const session = require("express-session");
 const cors = require("cors");
 const axios = require("axios");
+const path = require("path");
 require("dotenv").config();
 
 const app = express();
@@ -32,11 +33,12 @@ app.use(session({
     }
 }));
 
-// Routes
-app.get("/record", (req, res) => {
-    res.send("This is the recording page. Implement your recording UI here.");
+// Serve the frontend UI
+app.get("/", (req, res) => {
+    res.sendFile(path.join(__dirname, "../index.html"));
 });
 
+// API route to send a voice note
 app.post("/sendMessage", multer().single("voiceNote"), async (req, res) => {
     const accessToken = req.session.accessToken;
     const chatId = req.body.chatId;
