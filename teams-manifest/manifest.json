@@ -6,9 +6,9 @@
     "packageName": "com.microsoft.teams.extension",
     "developer": {
         "name": "Teams App, Inc.",
-        "websiteUrl": "https://14ee-202-83-55-151.ngrok-free.app",
-        "privacyUrl": "https://14ee-202-83-55-151.ngrok-free.app/privacy",
-        "termsOfUseUrl": "https://14ee-202-83-55-151.ngrok-free.app/terms"
+        "websiteUrl": "https://temsplugin.netlify.app",
+        "privacyUrl": "https://temsplugin.netlify.app/privacy",
+        "termsOfUseUrl": "https://temsplugin.netlify.app/terms"
     },
     "icons": {
         "color": "color.png",
@@ -44,8 +44,8 @@
     {
         "entityId": "voice-messages",
         "name": "Voice Messages",
-        "contentUrl": "https://https://temsplugin.netlify.app/",
-        "websiteUrl": "https://https://temsplugin.netlify.app/",
+        "contentUrl": "https://temsplugin.netlify.app/",
+        "websiteUrl": "https://temsplugin.netlify.app/",
         "scopes": ["personal"]
     }
 ],
@@ -63,7 +63,7 @@
     ],
     "webApplicationInfo": {
         "id": "f984ebaf-4c50-4de8-8687-80672674ab06",
-        "resource": "https://https://temsplugin.netlify.app/.netlify/functions/server"
+        "resource": "https://temsplugin.netlify.app/.netlify/functions/server"
     },
     "devicePermissions": [
         "media"
